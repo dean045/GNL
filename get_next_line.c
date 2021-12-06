@@ -6,44 +6,52 @@
 /*   By: brhajji- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 13:15:56 by brhajji-          #+#    #+#             */
-/*   Updated: 2021/12/03 19:38:14 by brhajji-         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:55:34 by brhajji-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
 
+char	*ft_dupfree(char *s, unsigned int start)
+{
+	unsigned int	i;
+	unsigned int	len;
+	char			*result;
+	
+	len = ft_strlen(s);
+	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i])
+	{
+		result[i] = s[start + i];
+		i++;
+	}
+	result[i] = '\0';
+	if (*s)
+		free(s);
+	return (result);
+}
+
+
 char *get_next_line(int fd)
 {
-	char	*buf;
+	char			buf[BUFFER_SIZE + 1];
 	char			*result;
 	int				ret;
-	int				x;
 	static char		*tmp;
 
-	x = 0;
-	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (fd == -1 || !buf)
+	if (fd == -1)
 		return (NULL);
-	while (x < 1)
+	while (!tmp || get_new_line(tmp) < 1)
 	{
-		if (tmp && get_new_line(tmp) > 0)
-		{
-			result = ft_substr(tmp, 0, get_new_line(tmp) + 1);
-			tmp = ft_substr(tmp, get_new_line(tmp) + 1, ft_strlen(tmp) - get_new_line(tmp));
-		}
-		else
-		{
-			ret = read(fd, buf, BUFFER_SIZE);
-			buf[ret]= '\0';
-			x = get_new_line(buf);
-			if (x > 0)
-			{
-				result = ft_strjoin(tmp, ft_substr(buf, 0, BUFFER_SIZE - x + 1));
-				free(tmp);
-				tmp = ft_substr(buf, x + 1, BUFFER_SIZE);
-			}
-			else
-				tmp = ft_strjoin(tmp, buf);
-		}
+		ret = read(fd, buf, BUFFER_SIZE);
+		buf[ret]= '\0';
+		tmp = ft_strjoin(tmp, buf);
+		if (ret < BUFFER_SIZE)
+			break;
 	}
+	result = ft_substr(tmp, 0, get_new_line(tmp) + 1);
+	tmp = ft_dupfree(tmp, get_new_line(tmp) + 1);
 	return (result);
 }

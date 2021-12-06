@@ -6,7 +6,7 @@
 /*   By: brhajji- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 13:22:22 by brhajji-          #+#    #+#             */
-/*   Updated: 2021/12/03 18:29:01 by brhajji-         ###   ########.fr       */
+/*   Updated: 2021/12/06 15:00:17 by brhajji-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -15,8 +15,8 @@ int main()
 	int		fd;
 	int		r = 0;
 
-	fd = open("brams42.txt");
-	while (r < 10)
+	fd = open("brams42.txt", O_RDONLY);
+	while (r < 18)
 	{
 		printf("%i %s\n",r , get_next_line(fd));
 		r++;

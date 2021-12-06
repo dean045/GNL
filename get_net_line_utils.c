@@ -6,11 +6,11 @@
 /*   By: brhajji- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 13:59:12 by brhajji-          #+#    #+#             */
-/*   Updated: 2021/12/03 19:20:52 by brhajji-         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:57:14 by brhajji-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
 	char	*nouveau;
@@ -66,14 +66,18 @@ int	get_new_line(char *src)
 	int	i;
 
 	i = 0;
-	while (src[i] && src[i] != '\n')
+	while (src[i])
+	{
+		if (src[i] == '\n')
+			return (i);
 		i++;
-	if (src[i] == '\0' || i == ft_strlen(src))
+	}
+	if (0 == ft_strlen(src))
 		return (-1);
-	return (i);
+	return (0);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	size_t	len1;
 	size_t	len2;
@@ -98,5 +102,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		if ((i < len2 && s2[len2 - i]) || (i == len2))
 			new[len2 + len1 - i] = (char)s2[len2 - i];
 	}
+	if (*s1)
+		free(s1);
 	return (new);
 }
